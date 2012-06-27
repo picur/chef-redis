@@ -20,11 +20,13 @@
 
 package "redis-server"
 
-service "redis" do
+service "redis-server" do
+  supports :reload => true, :restart => true, :status => true
   start_command "/etc/init.d/redis-server start #{node['redis']['config_path']}"
   stop_command "/etc/init.d/redis-server stop"
+  reload_command '/etc/init.d/redis-server force-reload'
   restart_command "/etc/init.d/redis-server restart"
-  action :start
+  action [:enable, :start]
 end
 
 template "/etc/redis/redis.conf" do
@@ -32,5 +34,5 @@ template "/etc/redis/redis.conf" do
   owner "root"
   group "root"
   mode 0644
-  notifies :restart, resources(:service => "redis")
+  notifies :reload, 'service[redis-server]'
 end
