@@ -11,13 +11,14 @@ describe_recipe 'redis::default' do
 
   describe "packages" do
     it "installs the required package" do
-      package("redis").must_be_installed
+      package("redis-server").must_be_installed
     end
   end
 
   describe "configuration" do
     it "has a configuration file" do
-      file("/etc/redis/redis.conf").must_exist.with(:mode, "644").with(:owner, "root").with(:group, "root")
+      #file("/etc/redis/redis.conf").must_have(:mode, "0644").with(:owner, "root").and(:group, "root")
+      file("/etc/redis/redis.conf").must_have(:owner, "root").and(:group, "root")
     end
   end
 
